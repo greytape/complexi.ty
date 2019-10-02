@@ -65,8 +65,8 @@
       }
 
       let playerManager = {
-        players: [],
         createPlayers(numberOfNewPlayers) {
+          this.players = [];
           for (let idx = 0; idx < numberOfNewPlayers; idx += 1) {
             let newPlayer = Object.create(Player);
             newPlayer.init();
@@ -80,6 +80,7 @@
           });
         },
         placePlayersOnPage() {
+          svg.innerHTML = "";
           this.players.forEach(player => {
             var newCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
             newCircle.setAttribute('r', 5);
@@ -98,8 +99,9 @@
             player.calculateMidpoint();
           });
         },
-
-
+        init() {
+          this.players = [];
+        }
       }
 
       let simManager = {
@@ -112,6 +114,7 @@
           }, 20);
         },
         init() {
+          let currentPlayerManager = Object.create(playerManager);
           playerManager.createPlayers(10);
           playerManager.placePlayersOnPage();
           playerManager.setPlayerTargets();
@@ -131,6 +134,7 @@
       simManager.init();
       
       startButton.addEventListener('click', function() {
+        simManager.init();
         simManager.run();
       });
       stopButton.addEventListener('click', function() {
