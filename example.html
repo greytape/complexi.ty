@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    svg {
+      width: 100%;
+      height: 600px;
+    }
+    circle {
+      background-color: black;
+    }
+  </style>
+</head>
+<body>
+  <svg>
+  </svg>
+  <button id="my-button">Click</button>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var svg = document.querySelector('svg');
+      var button = document.querySelector('#my-button');
+
+      let Player = {
+        xPosition: 0,
+        yPosition: 0,
+        currentMidpoint: null,
+        targetedPlayers: [],
+        targetPlayers() {
+          for (idx = 0; idx < 2; idx += 1) {
+            let targetedPlayer = playerManager.players[Math.floor(Math.random() * playerManager.players.length)];
+            this.targetedPlayers.push(targetedPlayer);
+          }
+        },
+        calculateMidpoint() {
+          let [targetA, targetB] = this.targetedPlayers;
+          let midpointX = (targetA.xPosition + targetB.xPosition) / 2;
+          let midpointY = (targetA.yPosition + targetB.yPosition) / 2;
+          this.currentMidpoint = {
+            x: midpointX, 
+            y: midpointY,
+          };
+        },
+        moveTowardMidPoint() {
+          let totalChangeInX = this.currentMidpoint.x - this.xPosition;
+          let totalChangeInY = this.currentMidpoint.y - this.yPosition;
+          let lengthOfVector = Math.sqrt(totalChangeInX ** 2 + totalChangeInY ** 2);
+          let normalizedChangeInX = totalChangeInX / lengthOfVector;
+          let normalizedChangeInY = totalChangeInY / lengthOfVector;
+          this.xPosition += normalizedChangeInX;
+          this.yPosition += normalizedChangeInY;
+        },
+        moveTowardMouseClick() {
+          let totalChangeInX = mouseClicks.xPosition - this.xPosition;
+          let totalChangeInY = mouseClicks.yPosition - this.yPosition;
+          let lengthOfVector = Math.sqrt(totalChangeInX ** 2 + totalChangeInY ** 2);
+          let normalizedChangeInX = totalChangeInX / lengthOfVector;
+          let normalizedChangeInY = totalChangeInY / lengthOfVector;
+          this.xPosition += normalizedChangeInX;
+          this.yPosition += normalizedChangeInY;
+        },
+        randomStartPoint() {
+          this.xPosition = Math.random() * 600;
+          this.yPosition = Math.random() * 600;
+        },
+      }
+
+      let playerManager = {
+        players: [],
+        createPlayers(numberOfNewPlayers) {
+          for (let idx = 0; idx < numberOfNewPlayers; idx += 1) {
+            let newPlayer = Object.create(Player);
+            newPlayer.randomStartPoint();
+            this.players.push(newPlayer);
+          }
+        },
+        movePlayers() {
+          this.players.forEach(player => {
+            player.moveTowardMouseClick();
+          });
+        },
+        placePlayersOnPage() {
+          this.players.forEach(player => {
+            var newCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            newCircle.setAttribute('r', 5);
+            newCircle.setAttribute('cx', player.xPosition);
+            newCircle.setAttribute('cy', player.yPosition);
+            svg.append(newCircle);
+          });
+        },
+        setPlayerTargets() {
+          this.players.forEach(player => {
+            player.targetPlayers();
+          });
+        },
+        setPlayerMidpoints() {
+          this.players.forEach(player => {
+            player.calculateMidpoint();
+          });
+        },
+
+
+      }
+
+      playerManager.createPlayers(1);
+      playerManager.placePlayersOnPage();
+      playerManager.setPlayerTargets();
+      playerManager.setPlayerMidpoints();
+
+
+      let renderManager = {
+        // 
+      }
+
+      let mouseClicks = {};
+
+      document.addEventListener('click', function(event) {
+        mouseClicks.xPosition = event.clientX;
+        mouseClicks.yPosition = event.clientY;
+        playerManager.movePlayers();
+        playerManager.placePlayersOnPage();
+      });
+      // button.addEventListener('click', placeRandomDots);
+    });
+  </script>
+</body>
+</html>
