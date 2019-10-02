@@ -6,7 +6,9 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.14.2/matter.js"></script>
+  
   <script src="./box.js"></script>
+  <script src="./boundary.js"></script>
   <title>Document</title>
 </head>
 <body>
@@ -18,28 +20,32 @@
     
       var engine;
       var world;
-      var boxes = [];
-      var ground = 
+      var circles = [];
+      var boundaries = [];
+
+      var ground;
 
       function setup() {
         createCanvas(400, 400);
         engine = Engine.create();
         world = engine.world;
-        Engine.run(engine);
-        var option = {
-          isStatic: true,
-        }
-        ground = Bodies.rectangle(200, height, width, 10, options);
-        World.add(world, ground);  
+        // Engine.run(engine);
+        
+        boundaries.push(new Boundary(250, 300, width, 30, -0.3));
+        boundaries.push(new Boundary(150, 200 / 2, width * 0.6, 30, 0.3));
       } 
 
       function mouseDragged() {
-        boxes.push(new Box(mouseX, mouseY, 25, 25));
+        circles.push(new Circle(mouseX, mouseY, random(1, 10)));
       }
 
       function draw() {
         background(51);
-        boxes.forEach(box => box.show());
+        Engine.update(engine);
+        circles.forEach(circle => circle.show());
+        boundaries.forEach(boundary => {
+          boundary.show();
+        })
       }
   </script>
 </body>
