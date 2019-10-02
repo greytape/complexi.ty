@@ -28,10 +28,6 @@
       let gameSession;
 
       let Player = {
-        xPosition: 0,
-        yPosition: 0,
-        currentMidpoint: null,
-        targetedPlayers: [],
         targetPlayers() {
           for (idx = 0; idx < 2; idx += 1) {
             let targetedPlayer = playerManager.players[Math.floor(Math.random() * playerManager.players.length)];
@@ -60,6 +56,12 @@
           this.xPosition = Math.random() * 600;
           this.yPosition = Math.random() * 600;
         },
+        init() {
+          this.xPosition = 0;
+          this.yPosition = 0;
+          this.currentMidpoint = null;
+          this.targetedPlayers = [];
+        },
       }
 
       let playerManager = {
@@ -67,6 +69,7 @@
         createPlayers(numberOfNewPlayers) {
           for (let idx = 0; idx < numberOfNewPlayers; idx += 1) {
             let newPlayer = Object.create(Player);
+            newPlayer.init();
             newPlayer.randomStartPoint();
             this.players.push(newPlayer);
           }
