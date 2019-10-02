@@ -18,11 +18,14 @@
 <body>
   <svg>
   </svg>
-  <button id="my-button">Click</button>
+  <button id="start-button">Start simulation.</button>
+  <button id="stop-button">Stop simulation.</button>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       var svg = document.querySelector('svg');
-      var button = document.querySelector('#my-button');
+      var startButton = document.querySelector('#start-button');
+      var stopButton = document.querySelector('#stop-button');
+      let gameSession;
 
       let Player = {
         xPosition: 0,
@@ -53,15 +56,6 @@
           this.xPosition += normalizedChangeInX;
           this.yPosition += normalizedChangeInY;
         },
-        moveTowardMouseClick() {
-          let totalChangeInX = mouseClicks.xPosition - this.xPosition;
-          let totalChangeInY = mouseClicks.yPosition - this.yPosition;
-          let lengthOfVector = Math.sqrt(totalChangeInX ** 2 + totalChangeInY ** 2);
-          let normalizedChangeInX = totalChangeInX / lengthOfVector;
-          let normalizedChangeInY = totalChangeInY / lengthOfVector;
-          this.xPosition += normalizedChangeInX;
-          this.yPosition += normalizedChangeInY;
-        },
         randomStartPoint() {
           this.xPosition = Math.random() * 600;
           this.yPosition = Math.random() * 600;
@@ -79,7 +73,7 @@
         },
         movePlayers() {
           this.players.forEach(player => {
-            player.moveTowardMouseClick();
+            player.moveTowardMidPoint();
           });
         },
         placePlayersOnPage() {
@@ -105,14 +99,21 @@
 
       }
 
-      playerManager.createPlayers(1);
-      playerManager.placePlayersOnPage();
-      playerManager.setPlayerTargets();
-      playerManager.setPlayerMidpoints();
-
-
-      let renderManager = {
-        // 
+      let simManager = {
+        run() {
+          gameSession = setInterval(function() {
+            playerManager.movePlayers();
+            playerManager.placePlayersOnPage();
+            playerManager.setPlayerTargets();
+            playerManager.setPlayerMidpoints();
+          }, 20);
+        },
+        init() {
+          playerManager.createPlayers(10);
+          playerManager.placePlayersOnPage();
+          playerManager.setPlayerTargets();
+          playerManager.setPlayerMidpoints();
+        },
       }
 
       let mouseClicks = {};
@@ -123,7 +124,15 @@
         playerManager.movePlayers();
         playerManager.placePlayersOnPage();
       });
-      // button.addEventListener('click', placeRandomDots);
+
+      simManager.init();
+      
+      startButton.addEventListener('click', function() {
+        simManager.run();
+      });
+      stopButton.addEventListener('click', function() {
+        clearInterval(gameSession);
+      });
     });
   </script>
 </body>
