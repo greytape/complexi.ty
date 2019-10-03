@@ -65,4 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
     Body.applyForce(ballA, ballA.position, randomVector(0.05));
     Body.applyForce(ballB, ballB.position, randomVector(0.05));
   }); 
+
+  var Player = ballA
 });
