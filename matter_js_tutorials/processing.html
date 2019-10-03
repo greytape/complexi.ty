@@ -36,7 +36,7 @@
       } 
 
       function mouseDragged() {
-        circles.push(new Circle(mouseX, mouseY, random(1, 10)));
+        circles.push(new Rectangle(mouseX, mouseY, random(5, 20), random(5, 20)));
       }
 
       function draw() {

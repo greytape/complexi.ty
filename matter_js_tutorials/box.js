@@ -1,11 +1,12 @@
-function Circle(x, y, r) {
+function Rectangle(x, y, w, h) {
   var options = {
-    friction: 0.1,
+    friction: 1,
     restitution: 1,
   };
-  this.body = Bodies.circle(x, y, r);
+  this.body = Bodies.rectangle(x, y, w, h);
   this.body.friction = 0;
-  this.r = r;
+  this.w = w;
+  this.h = h;
   World.add(world, this.body);
 
   this.show = function() {
@@ -16,7 +17,7 @@ function Circle(x, y, r) {
     translate(pos.x, pos.y);
     rotate(angle);
     rectMode(CENTER); 
-    ellipse(0, 0, this.r * 2);
+    rect(0, 0, this.w, this.h);
     pop();
   }
 }
