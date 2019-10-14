@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <script src="example.js"></script>
   <title>Document</title>
   <style>
     svg {
@@ -60,6 +59,7 @@
         init() {
           this.xPosition = 0;
           this.yPosition = 0;
+          this.colour = '#' + Math.floor(Math.random() * 16777216).toString(16);
           this.currentMidpoint = null;
           this.targetedPlayers = [];
         },
@@ -87,6 +87,7 @@
             newCircle.setAttribute('r', 5);
             newCircle.setAttribute('cx', player.xPosition);
             newCircle.setAttribute('cy', player.yPosition);
+            newCircle.setAttribute('fill', player.colour);
             svg.append(newCircle);
           });
         },
